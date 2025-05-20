@@ -1,0 +1,23 @@
+{
+  "name": "microblog",
+  "version": "1.0.0",
+  "description": "Micro Blog for BackendClass",
+  "homepage": "https://github.com/ViniciusNeia/BackEndClass#readme",
+  "bugs": {
+    "url": "https://github.com/ViniciusNeia/BackEndClass/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ViniciusNeia/BackEndClass.git"
+  },
+  "license": "ISC",
+  "author": "Vinicius Neia",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "mongodb": "^6.16.0"
+  }
+}
