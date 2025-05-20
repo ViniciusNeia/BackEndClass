@@ -1,50 +1,33 @@
 Este projeto é uma biblioteca desenvolvida em Node.js que fornece funcionalidades básicas de um sistema de micro-blogging
 
 ⚙️ Tecnologias Utilizadas
-Node.js
-
-MongoDB
-
-MongoDB Native Driver
-
-JavaScript ES6+
+- Node.js
+- MongoDB
+- MongoDB Native Driver
+- JavaScript ES6+
 
 ✅ Funcionalidades
 📌 Usuários:
-
-Criar novo usuário
-
-Buscar todos os usuários
-
-Buscar usuário por ID
-
-Excluir usuário
+- Criar novo usuário
+- Buscar todos os usuários
+- Buscar usuário por ID
+- Excluir usuário
 
 📝 Postagens:
-
-Criar nova postagem
-
-Buscar todas as postagens
-
-Buscar post por ID
-
-Excluir post
+- Criar nova postagem
+- Buscar todas as postagens
+- Buscar post por ID
+- Excluir post
 
 💬 Comentários:
-
-Criar comentário associado a post
-
-Buscar comentários por post
-
-Excluir comentário
+- Criar comentário associado a post
+- Buscar comentários por post
+- Excluir comentário
 
 🧾 Logs:
-
-Registra todas as ações executadas pelo sistema
-
-Registra erros com mensagens detalhadas
-
-Arquivo gerado: logs/system.log
+- Registra todas as ações executadas pelo sistema
+- Registra erros com mensagens detalhadas
+- Arquivo gerado: logs/system.log
 
 🚀 Como Executar
 1. Clone o repositório
