@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts</title>
+    <style>
+        .edit-form { display: none; }
+        .editing .edit-form { display: inline; }
+        .editing .post-content, .editing .edit-btn { display: none; }
+    </style>
+    <script>
+        function enableEdit(postId) {
+            document.getElementById('post-' + postId).classList.add('editing');
+            document.querySelector('#post-' + postId + ' .post-content').style.display = 'none';
+            document.querySelector('#post-' + postId + ' .edit-form').style.display = 'inline';
+            document.querySelector('#post-' + postId + ' .edit-form input[name="content"]').focus();
+        }
+        function cancelEdit(postId) {
+            document.getElementById('post-' + postId).classList.remove('editing');
+            document.querySelector('#post-' + postId + ' .post-content').style.display = '';
+            document.querySelector('#post-' + postId + ' .edit-form').style.display = 'none';
+        }
+    </script>
+</head>
+<body>
+    <h1>Posts</h1>
+    <form action="/posts" method="POST">
+        <input type="text" name="content" placeholder="Conteúdo do post" required>
+        <select name="author" required>
+            <option value="">Autor</option>
+            {{#each users}}
+                <option value="{{this.username}}">{{this.username}}</option>
+            {{/each}}
+        </select>
+        <button type="submit">Criar Post</button>
+    </form>
+    <form action="/posts" method="GET">
+        <label for="author">Filtrar por autor:</label>
+        <select name="author" id="author" onchange="this.form.submit()">
+            <option value="">Todos</option>
+            {{#each users}}
+                <option value="{{this.username}}" {{#if this.selected}}selected{{/if}}>{{this.username}}</option>
+            {{/each}}
+        </select>
+    </form>
+    <ul>
+        {{#each posts}}
+            <li id="post-{{this._id}}">
+                <span class="post-content" onclick="enableEdit('{{this._id}}')" style="cursor:pointer;{{#if (lookup ../editing this._id)}}display:none;{{/if}}">
+                    {{this.content}}
+                </span>
+                <form class="edit-form" action="/posts/{{this._id}}?_method=PUT" method="POST" style="display:inline;{{#unless (lookup ../editing this._id)}}display:none;{{/unless}}">
+                    <input type="text" name="content" value="{{this.content}}" required style="width: 250px;">
+                    <button type="submit">Salvar</button>
+                    <button type="button" onclick="cancelEdit('{{this._id}}')">Cancelar</button>
+                </form>
+                <p><strong>Autor:</strong> {{this.author}}</p>
+                <button onclick="location.href='/posts/{{this._id}}/comments'">Comentários</button>
+                <form action="/posts/{{this._id}}?_method=DELETE" method="POST" style="display:inline;">
+                    <button type="submit">Deletar</button>
+                </form>
+            </li>
+        {{/each}}
+    </ul>
+    <button onclick="window.location.href='/users'">Usuários</button>
+</body>
+</html>

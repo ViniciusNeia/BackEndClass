@@ -4,7 +4,7 @@ class Post{
     constructor(bd){
         this.collection = bd.collection('posts')
     }
-async create(post){
+    async create(post){
         try{
             if(!post.author || !post.content) throw new Error('Preencha os campos obrigatorios');
             const creation = await this.collection.insertOne({...post, createdAt: new Date()})
@@ -37,6 +37,44 @@ async create(post){
             throw err;
         }
     }
+    async updatePostById(id, newContent) {
+        try {
+            if (!newContent || typeof newContent !== 'string' || !newContent.trim()) {
+                throw new Error('Conteúdo inválido para atualização.');
+            }
+
+            const result = await this.collection.updateOne(
+                { _id: id},
+                {
+                    $set: {
+                        content: newContent,
+                        updatedAt: new Date(),
+                    },
+                }
+            );
+
+            if (result.modifiedCount === 0) {
+                throw new Error('Nenhum post foi atualizado.');
+            }
+
+            LogA('Post Updated', { id });
+            return result;
+        } catch (err) {
+            LogE('Error On Updating Post', err);
+            throw err;
+        }
+    }
+
+    async getAllPosts() {
+        try {
+            const posts = await this.collection.find({}).toArray();
+            LogA('All Posts Retrieved', { count: posts.length });
+            return posts;
+        } catch (err) {
+            LogE('Error On Getting All Posts', err);
+            throw err;
+        }
+    }
 }
 
-export {Post}
+export { Post };

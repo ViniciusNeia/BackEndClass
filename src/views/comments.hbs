@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comments</title>
+</head>
+<body>
+    <h1>Comentários</h1>
+    <form action="/posts/{{postId}}/comments" method="POST">
+        <select name="author" required>
+            <option value="">Autor</option>
+            {{#each users}}
+                <option value="{{this.username}}">{{this.username}}</option>
+            {{/each}}
+        </select>
+        <input type="text" name="content" placeholder="Comentário" required>
+        <button type="submit">Adicionar Comentário</button>
+    </form>
+    <ul>
+        {{#if comments.length}}
+            {{#each comments}}
+                <li>
+                    <strong>{{this.author}}:
+                    <form action="/posts/{{../postId}}/comments/{{this._id}}?_method=PUT" method="POST" style="display:inline;">
+                        <input type="text" name="content" value="{{this.content}}" required>
+                        <input type="hidden" name="author" value="{{this.author}}">
+                        <button type="submit">Atualizar</button>
+                    </form>
+                    <form action="/posts/{{../postId}}/comments/{{this._id}}?_method=DELETE" method="POST" style="display:inline;">
+                        <button type="submit">Deletar</button>
+                    </form>
+                </li>
+            {{/each}}
+        {{else}}
+            <li>Nenhum comentário ainda.</li>
+        {{/if}}
+    </ul>
+    <button onclick="window.location.href='/posts'">Voltar para Posts</button>
+</body>
+</html>
