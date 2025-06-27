@@ -53,7 +53,10 @@ npm start //Criado o Script para rodar em modo de desenvolvedor com o nodemon
 ```
 
 Instruções de Uso:
-Ola Professor, é possivel apenas editar e apagar seus proprios posts. A senha de login é igual ao e-mail na hora de criação do usuário. Além disso, se for criado um usuário com username "admin" ele terá acesso para modificar, apagar e editar posts e comentarios de outros usuários. Simulando um superusuário.
-Estou também adicionando o Json da minha conexão do banco local. Garanti a unicidade de usernames por meio do banco, garantindo que só exista 1 usuário admin.
+
+Ola Professor, é possivel apenas editar e apagar seus proprios posts. A senha de login é igual ao e-mail na hora de criação do usuário. 
+
+Além disso, se for criado um usuário com username "admin" ele terá acesso para modificar, apagar e editar posts e comentarios de outros usuários. Simulando um superusuário.
+
 
 Autor: Vinicius Gonçalves Neia
