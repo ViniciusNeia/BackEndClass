@@ -27,18 +27,19 @@
     <h1>Posts</h1>
     <form action="/posts" method="POST">
         <input type="text" name="content" placeholder="Conteúdo do post" required>
-        <select name="author" required>
-            <option value="">Autor</option>
-            {{#each users}}
-                <option value="{{this.username}}">{{this.username}}</option>
-            {{/each}}
-        </select>
+        <input type="hidden" name="author" value="{{user.username}}">
+        <span><strong>Autor:</strong> {{user.username}}</span>
         <button type="submit">Criar Post</button>
     </form>
     <form action="/posts" method="GET">
         <label for="author">Filtrar por autor:</label>
         <select name="author" id="author" onchange="this.form.submit()">
             <option value="">Todos</option>
+            {{#if ../selectedAuthor}}
+                <option value="{{../selectedAuthor}}" {{#if (eq ../selectedAuthor user.username)}}selected{{/if}}>Eu</option>
+            {{else}}
+                <option value="{{user.username}}">Eu</option>
+            {{/if}}
             {{#each users}}
                 <option value="{{this.username}}" {{#if this.selected}}selected{{/if}}>{{this.username}}</option>
             {{/each}}
@@ -57,12 +58,21 @@
                 </form>
                 <p><strong>Autor:</strong> {{this.author}}</p>
                 <button onclick="location.href='/posts/{{this._id}}/comments'">Comentários</button>
+                {{#if (eq ../user.username 'admin')}}
                 <form action="/posts/{{this._id}}?_method=DELETE" method="POST" style="display:inline;">
                     <button type="submit">Deletar</button>
                 </form>
+                {{/if}}
             </li>
         {{/each}}
     </ul>
+    {{#if (eq user.username 'admin')}}
     <button onclick="window.location.href='/users'">Usuários</button>
+    {{/if}}
+    {{#if user}}
+    <form action="/logout" method="POST" style="display:inline; float:right;">
+        <button type="submit">Logout</button>
+    </form>
+    {{/if}}
 </body>
 </html>

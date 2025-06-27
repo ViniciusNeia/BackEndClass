@@ -8,12 +8,8 @@
 <body>
     <h1>Comentários</h1>
     <form action="/posts/{{postId}}/comments" method="POST">
-        <select name="author" required>
-            <option value="">Autor</option>
-            {{#each users}}
-                <option value="{{this.username}}">{{this.username}}</option>
-            {{/each}}
-        </select>
+        <input type="hidden" name="author" value="{{user.username}}">
+        <span><strong>Autor:</strong> {{user.username}}</span>
         <input type="text" name="content" placeholder="Comentário" required>
         <button type="submit">Adicionar Comentário</button>
     </form>
@@ -21,15 +17,20 @@
         {{#if comments.length}}
             {{#each comments}}
                 <li>
-                    <strong>{{this.author}}:
+                    <strong>{{this.author}}:</strong>
+                    <span>{{this.content}}</span>
+                    {{#if (or (eq ../user.username this.author) (eq ../user.username 'admin'))}}
                     <form action="/posts/{{../postId}}/comments/{{this._id}}?_method=PUT" method="POST" style="display:inline;">
                         <input type="text" name="content" value="{{this.content}}" required>
                         <input type="hidden" name="author" value="{{this.author}}">
                         <button type="submit">Atualizar</button>
                     </form>
-                    <form action="/posts/{{../postId}}/comments/{{this._id}}?_method=DELETE" method="POST" style="display:inline;">
-                        <button type="submit">Deletar</button>
-                    </form>
+                    {{/if}}
+                    {{#if (eq ../user.username 'admin')}}
+                        <form action="/posts/{{../postId}}/comments/{{this._id}}?_method=DELETE" method="POST" style="display:inline;">
+                            <button type="submit">Deletar</button>
+                        </form>
+                    {{/if}} 
                 </li>
             {{/each}}
         {{else}}

@@ -11,6 +11,7 @@
         <input type="text" name="username" placeholder="Digite seu nome de usuário" required>
         <input type="password" name="password" placeholder="Digite sua senha" required>
         <button type="submit">Entrar</button>
+        <button type="button" onclick="window.location.href='/register'">Registrar Novo Usuário</button>
     </form>
     <script>
         const user = await userService.getUser(username);

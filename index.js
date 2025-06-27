@@ -11,6 +11,7 @@ import methodOverride from 'method-override';
 import cookieParser from 'cookie-parser';
 import { verifyToken } from './src/middleware/JWTauth.js';
 import jwt from 'jsonwebtoken';
+import hbs from 'hbs';
 
 const db = await connect();
 const userService = new User(db);
@@ -20,6 +21,13 @@ const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
 dotenv.config();
+
+hbs.registerHelper('eq', function(a, b) {
+    return a === b;
+});
+hbs.registerHelper('or', function(a, b) {
+    return a || b;
+});
 
 app.set('view engine', 'hbs');
 app.set('views', path.join(process.cwd(), 'src','views'));
@@ -69,7 +77,12 @@ app.get('/posts', verifyToken, async (req, res) => {
             ...u,
             selected: u.username === author
         }));
-        res.render('posts', { posts: postsWithAuthorFlag, users: usersWithSelected, selectedAuthor: author || '' });
+        res.render('posts', {
+            posts: postsWithAuthorFlag,
+            users: usersWithSelected,
+            selectedAuthor: author || '',
+            user: req.user
+        });
     } catch (err) {
         res.status(500).send('Erro ao buscar posts: ' + err.message);
     }
@@ -143,7 +156,7 @@ app.get('/posts/:id/comments', verifyToken, async (req, res) => {
         const postId = req.params.id;
         const comments = await commentService.findByPostId(postId);
         const users = await userService.read(); 
-        res.render('comments', { postId, comments, users }); 
+        res.render('comments', { postId, comments, users, user: req.user }); 
     } catch (err) {
         res.status(500).send('Erro ao buscar comentários: ' + err.message);
     }
@@ -152,7 +165,9 @@ app.get('/posts/:id/comments', verifyToken, async (req, res) => {
 app.post('/posts/:id/comments', verifyToken, async (req, res) => {
     try {
         const postId = req.params.id;
-        const { author, content } = req.body;
+        // Always use logged-in user as author
+        const author = req.user.username;
+        const { content } = req.body;
         await commentService.create({ postId, author, content });
         res.redirect(`/posts/${postId}/comments`);
     } catch (err) {
@@ -180,6 +195,23 @@ app.delete('/posts/:id/comments/:commentId', verifyToken, async (req, res) => {
         res.redirect(`/posts/${postId}/comments`);
     } catch (err) {
         res.status(500).send('Erro ao deletar comentário: ' + err.message);
+    }
+});
+app.post('/logout', (req, res) => {
+    res.clearCookie('token');
+    res.redirect('/');
+});
+app.get('/register', (req, res) => {
+    res.render('newUser');
+});
+
+app.post('/register', async (req, res) => {
+    try {
+        const { username, email } = req.body;
+        await userService.create({ username, email });
+        res.redirect('/');
+    } catch (err) {
+        res.status(500).send('Erro ao registrar usuário: ' + err.message);
     }
 });
 server.listen(PORT, () => {
